@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,4 +19,13 @@ def read_root():
     return {"message": "Welcome to the WebX API"}
 
 
+import json
 
+@app.post("/submit")
+async def submit_data(request: Request):
+    data = await request.json()
+    
+    with open("data_log.json", "a") as f:
+        f.write(json.dumps(data) + "\n")
+    
+    return {"status": "success", "received": data}
